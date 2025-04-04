@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import 'pages/home/home_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
   runApp(const MyApp());
+}
+
+// GetX orqali temani boshqarish uchun controller
+class ThemeController extends GetxController {
+  // Dastlabki holat: light theme
+  RxBool isDarkMode = false.obs;
+
+  // Tema almashtirish metodi
+  void toggleTheme() {
+    isDarkMode.value = !isDarkMode.value;
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -12,13 +28,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Tic Tac Toe',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    // Ilovaning barcha joyida foydalanish uchun ThemeController ni yarating
+    final themeController = Get.put(ThemeController());
+    return Obx(
+          () => GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Tic Tac Toe',
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        // themeMode themeController.isDarkMode ga qarab yangilanadi
+        themeMode: themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
+        home: const HomePage(),
       ),
-      home: const HomePage(),
     );
   }
 }
