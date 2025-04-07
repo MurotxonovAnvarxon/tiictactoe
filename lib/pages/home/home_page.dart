@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:rive/rive.dart';
 import 'package:tiictactoe/main.dart';
+import 'package:tiictactoe/pages/game/game_page.dart';
 
-import '../../widgets/circle_widget.dart';
-import '../../widgets/cross_widget.dart';
-import '../game/game_page.dart';
-
-part 'game_title_widget.dart';
+import 'light.dart';
 
 part 'game_mode_selection_widget.dart';
+part 'game_title_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -21,47 +18,53 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final themeController = Get.find<ThemeController>();
-  late RiveAnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = SimpleAnimation('idle', autoplay: false);
-  }
-
-  void _startAnimation() {
-    // Agar animatsiya hali ishga tushmagan bo'lsa, uni ishga tushiramiz
-    setState(() {
-      _controller.isActive = true;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Efekti AppBar ortida ham ko‘rinishi uchun:
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        actions: [
-          Obx(() {
-            // Obx ichida to'g'ridan-to'g'ri observabledan foydalanamiz
-            bool isDark = themeController.isDarkMode.value;
-            return IconButton(
-              icon: Icon(Icons.light, size: 24, color: isDark ? Colors.yellow : Colors.black),
-              onPressed: () {
-                themeController.toggleTheme();
-                _startAnimation();
-              },
-            );
-          }),
-        ],
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        title: Obx(() {
+          bool isDark = themeController.isDarkMode.value;
+          return GestureDetector(
+            onTap: () {
+              themeController.toggleTheme();
+            },
+            child: Icon(Icons.light_outlined, size: 80, color: isDark ? Colors.white : Colors.black),
+          );
+        }),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          // SizedBox(width: 300, height: 300, child: RiveAnimation.asset("assets/lamp.riv", controllers: [_controller])),
-          Spacer(flex: 2),
-          GameTitleWidget(),
-          Spacer(),
-          GameModeSelectionWidget(),
-          Spacer(flex: 2),
+          // Faqat dark mode bo'lganda spotlight effektini ko'rsatish:
+          Obx(() {
+            return themeController.isDarkMode.value
+                ? Positioned.fill(
+              top: 65,
+              child: CustomPaint(
+                painter: RectangularSpotlightPainter(
+                  topWidth: 56, // Yorug'lik manbai (AppBar dagi ikonka) kengligi
+                  color: Colors.white,
+                ),
+              ),
+            )
+                : const SizedBox.shrink();
+          }),
+          // Ustida qolgan vidjetlar:
+          Column(
+            children: const [
+              Spacer(flex: 3),
+              SizedBox(height: 10),
+              GameTitleWidget(),
+              Spacer(),
+              GameModeSelectionWidget(),
+              Spacer(flex: 2),
+            ],
+          ),
         ],
       ),
     );

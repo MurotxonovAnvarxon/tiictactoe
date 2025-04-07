@@ -18,34 +18,11 @@ class GameTitleWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 30.0),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: const [
-        //     SizedBox(
-        //       width: 54.0,
-        //       height: 54.0,
-        //       child: CrossWidget(
-        //         strokeWidth: 18.0,
-        //       ),
-        //     ),
-        //     SizedBox(
-        //       width: 24.0,
-        //     ),
-        //     SizedBox(
-        //       width: 54.0,
-        //       height: 54.0,
-        //       child: CircleWidget(
-        //         strokeWidth: 16.0,
-        //       ),
-        //     ),
-        //   ],
-        // )
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Lottie.asset(
               'assets/x_0_2.json',
-              // controller: controller,
               height: 250,
               repeat: true,
             ),
