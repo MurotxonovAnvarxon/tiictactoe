@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
             onTap: () {
               themeController.toggleTheme();
             },
-            child: Icon(Icons.light_outlined, size: 80, color: isDark ? Colors.white : Colors.black),
+            child: Icon(Icons.light, size: 80, color: isDark ? Colors.white : Colors.black),
           );
         }),
       ),
